@@ -1,8 +1,127 @@
-﻿@{
-    ViewData["Title"] = "Home Page";
-}
+﻿<script type="text/javascript">
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+    const getMathSignValue = (mathSignDescription) => {
+
+        let _mathSignValue
+
+        if (mathSignDescription == @Json.Serialize(ControllerHelper.EnumHelper.GetDescription(ControllerHelper.EnumHelper.MathSign.Addition))) {
+            _mathSignValue = "@ControllerHelper.EnumHelper.MathSign.Addition.ToString()"
+        }
+
+        if (mathSignDescription == @Json.Serialize(ControllerHelper.EnumHelper.GetDescription(ControllerHelper.EnumHelper.MathSign.Subtraction))) {
+            _mathSignValue = "@ControllerHelper.EnumHelper.MathSign.Subtraction.ToString()"
+        }
+
+        if (mathSignDescription == @Json.Serialize(ControllerHelper.EnumHelper.GetDescription(ControllerHelper.EnumHelper.MathSign.Division))) {
+            _mathSignValue = "@ControllerHelper.EnumHelper.MathSign.Division.ToString()"
+        }
+
+        if (mathSignDescription == @Json.Serialize(ControllerHelper.EnumHelper.GetDescription(ControllerHelper.EnumHelper.MathSign.Multiplication))) {
+            _mathSignValue = "@ControllerHelper.EnumHelper.MathSign.Multiplication.ToString()"
+        }
+
+        return _mathSignValue
+    }
+
+    const getMathSignDescription = (mathSignValue) => {
+
+        let _mathSignDescription
+
+        if (mathSignValue == "@ControllerHelper.EnumHelper.MathSign.Addition.ToString()") {
+            _mathSignDescription = @Json.Serialize(ControllerHelper.EnumHelper.GetDescription(ControllerHelper.EnumHelper.MathSign.Addition));
+        }
+
+        if (mathSignValue == "@ControllerHelper.EnumHelper.MathSign.Subtraction.ToString()") {
+            _mathSignDescription = @Json.Serialize(ControllerHelper.EnumHelper.GetDescription(ControllerHelper.EnumHelper.MathSign.Subtraction));
+        }
+
+        if (mathSignValue == "@ControllerHelper.EnumHelper.MathSign.Division.ToString()") {
+            _mathSignDescription = @Json.Serialize(ControllerHelper.EnumHelper.GetDescription(ControllerHelper.EnumHelper.MathSign.Division));
+        }
+
+        if (mathSignValue == "@ControllerHelper.EnumHelper.MathSign.Multiplication.ToString()") {
+            _mathSignDescription = @Json.Serialize(ControllerHelper.EnumHelper.GetDescription(ControllerHelper.EnumHelper.MathSign.Multiplication));
+        }
+
+        return _mathSignDescription
+    }
+
+    const submit = () => {
+
+        const _mathSign = document.querySelector("#mathSign")
+
+        if (!!_mathSign.textContent) {
+
+            let _parameters
+
+            if (!!document.querySelector("#number2").textContent) {
+                _parameters =
+                `Number1=${serverNumberFormat(document.querySelector("#displayNumber").value)}
+                &Number2=${serverNumberFormat(document.querySelector("#number2").textContent)}
+                &MathSign=${getMathSignValue(_mathSign.textContent)}`
+            } else {
+                _parameters =
+                `Number1=${serverNumberFormat(document.querySelector("#number1").textContent)}
+                &Number2=${serverNumberFormat(document.querySelector("#displayNumber").value)}
+                &MathSign=${getMathSignValue(_mathSign.textContent)}`
+            }
+
+            fetch("/Home/Calculate", postOptions(removeLineBreaks(_parameters))).
+                then(handleError).
+                then(jsonDataType).
+                then((data) => {
+
+                    document.querySelector("#displayNumber").value = formatNumber(data.answer)
+                    document.querySelector("#number1").textContent = formatNumber(data.number1)
+                    document.querySelector("#number2").textContent = formatNumber(data.number2)
+                    _mathSign.textContent = getMathSignDescription(data.mathSign)
+                    document.querySelector("#equalSign").textContent = @Json.Serialize(ControllerHelper.EnumHelper.GetDescription(ControllerHelper.EnumHelper.Function.Equal));
+                }).
+                catch((error) => {
+                    console.log(error)
+                })
+        }
+    }
+
+</script>
+
+<div class="container">
+    <div class="summary">
+        <label id="number1" class="number"></label>
+        <label id="mathSign" class="math-sign"></label>
+        <label id="number2" class="number"></label>
+        <label id="equalSign" class="equal-sign"></label>
+    </div>
+    <div class="display">
+        <input id="displayNumber" class="display-number" type="text" value="0" readonly />
+    </div>
+    <div class="functions-numbers-mathsigns">
+        <div class="functions-numbers">
+            <div class="clear-entry">
+                <input id="clearEntry" class="function-number-btn" type="button" value="@ControllerHelper.EnumHelper.GetDescription(ControllerHelper.EnumHelper.Function.ClearEntry)" onclick="clearEntry()" />
+            </div>
+            <div class="clear-all">
+                <input id="clearAll" class="function-number-btn" type="button" value="@ControllerHelper.EnumHelper.GetDescription(ControllerHelper.EnumHelper.Function.ClearAll)" onclick="clearAll()" />
+            </div>
+            <input class="number-btn" type="button" value="@ControllerHelper.EnumHelper.GetDescription(ControllerHelper.EnumHelper.Number.Seven)" onclick="enterNumber(this.value)" />
+            <input class="number-btn" type="button" value="@ControllerHelper.EnumHelper.GetDescription(ControllerHelper.EnumHelper.Number.Eight)" onclick="enterNumber(this.value)" />
+            <input class="number-btn" type="button" value="@ControllerHelper.EnumHelper.GetDescription(ControllerHelper.EnumHelper.Number.Nine)" onclick="enterNumber(this.value)" />
+            <input class="number-btn" type="button" value="@ControllerHelper.EnumHelper.GetDescription(ControllerHelper.EnumHelper.Number.Four)" onclick="enterNumber(this.value)" />
+            <input class="number-btn" type="button" value="@ControllerHelper.EnumHelper.GetDescription(ControllerHelper.EnumHelper.Number.Five)" onclick="enterNumber(this.value)" />
+            <input class="number-btn" type="button" value="@ControllerHelper.EnumHelper.GetDescription(ControllerHelper.EnumHelper.Number.Six)" onclick="enterNumber(this.value)" />
+            <input class="number-btn" type="button" value="@ControllerHelper.EnumHelper.GetDescription(ControllerHelper.EnumHelper.Number.One)" onclick="enterNumber(this.value)" />
+            <input class="number-btn" type="button" value="@ControllerHelper.EnumHelper.GetDescription(ControllerHelper.EnumHelper.Number.Two)" onclick="enterNumber(this.value)" />
+            <input class="number-btn" type="button" value="@ControllerHelper.EnumHelper.GetDescription(ControllerHelper.EnumHelper.Number.Three)" onclick="enterNumber(this.value)" />
+            <input class="number-btn" type="button" value="@ControllerHelper.EnumHelper.GetDescription(ControllerHelper.EnumHelper.Number.Zero)" onclick="enterNumber(this.value)" />
+            <div class="equal">
+                <input id="equal" class="function-number-btn" type="button" value="@ControllerHelper.EnumHelper.GetDescription(ControllerHelper.EnumHelper.Function.Equal)" onclick="submit()" />
+            </div>
+        </div>
+        <div class="math-signs">
+            <input class="function-number-btn" type="button" value="@ControllerHelper.EnumHelper.GetDescription(ControllerHelper.EnumHelper.MathSign.Division)" onclick="enterMathSign(this.value)" />
+            <input class="function-number-btn" type="button" value="@ControllerHelper.EnumHelper.GetDescription(ControllerHelper.EnumHelper.MathSign.Multiplication)" onclick="enterMathSign(this.value)" />
+            <input class="function-number-btn" type="button" value="@ControllerHelper.EnumHelper.GetDescription(ControllerHelper.EnumHelper.MathSign.Subtraction)" onclick="enterMathSign(this.value)" />
+            <input class="function-number-btn" type="button" value="@ControllerHelper.EnumHelper.GetDescription(ControllerHelper.EnumHelper.MathSign.Addition)" onclick="enterMathSign(this.value)" />
+        </div>
+    </div>
 </div>
