@@ -42,35 +42,33 @@ namespace Calculator.BLL
         {
             try
             {
-                float _answer = 0, 
-                    _number1 = float.Parse(calculateReq.Number1.Replace('.', ',').Replace(" ", "")), 
-                    _number2 = float.Parse(calculateReq.Number2.Replace('.', ',').Replace(" ", ""));
+                CalculatorService _calculatorService = new CalculatorService();
 
                 if (calculateReq.MathSign == CalculatorEnum.MathSign.Addition.ToString())
                 {
-                    _answer = _number1 + _number2;
+                    _calculatorService.Addition(calculateReq.GetNumber1, calculateReq.GetNumber2);
                 }
 
                 if (calculateReq.MathSign == CalculatorEnum.MathSign.Subtraction.ToString())
                 {
-                    _answer = _number1 - _number2;
+                    _calculatorService.Subtraction(calculateReq.GetNumber1, calculateReq.GetNumber2);
                 }
 
                 if (calculateReq.MathSign == CalculatorEnum.MathSign.Division.ToString())
                 {
-                    _answer = _number1 / _number2;
+                    _calculatorService.Division(calculateReq.GetNumber1, calculateReq.GetNumber2);
                 }
 
                 if (calculateReq.MathSign == CalculatorEnum.MathSign.Multiplication.ToString())
                 {
-                    _answer = _number1 * _number2;
+                    _calculatorService.Multiplication(calculateReq.GetNumber1, calculateReq.GetNumber2);
                 }
 
                 return new CalculateResp()
                 {
-                    Answer = _answer,
-                    Number1 = _number1,
-                    Number2 = _number2,
+                    Answer = _calculatorService.Answer,
+                    Number1 = calculateReq.GetNumber1,
+                    Number2 = calculateReq.GetNumber2,
                     MathSign = calculateReq.MathSign
                 };
             }
